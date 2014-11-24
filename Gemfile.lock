@@ -6,6 +6,7 @@ GEM
     bcrypt-ruby (3.1.5)
       bcrypt (>= 3.1.3)
     coderay (1.1.0)
+    cookiejar (0.3.2)
     daemons (1.1.9)
     data_mapper (1.2.0)
       dm-aggregates (~> 1.2.0)
@@ -48,8 +49,17 @@ GEM
       dm-core (~> 1.2.0)
     dm-yaml-adapter (1.2.0)
       dm-core (~> 1.2.0)
+    em-http-request (1.1.2)
+      addressable (>= 2.3.4)
+      cookiejar
+      em-socksify (>= 0.3)
+      eventmachine (>= 1.0.3)
+      http_parser.rb (>= 0.6.0)
+    em-socksify (0.3.0)
+      eventmachine (>= 1.0.0.beta.4)
     eventmachine (1.0.3)
     fastercsv (1.5.5)
+    http_parser.rb (0.6.0)
     json (1.8.1)
     json_pure (1.8.1)
     method_source (0.8.2)
@@ -93,6 +103,7 @@ PLATFORMS
 DEPENDENCIES
   data_mapper
   dm-yaml-adapter
+  em-http-request
   eventmachine
   pry
   rspec

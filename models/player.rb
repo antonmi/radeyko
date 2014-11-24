@@ -1,10 +1,11 @@
 class Player
 
-  attr_reader :status
+  attr_reader :status, :channel, :buffer
 
-  def initialize(playlist, player_channel)
+  def initialize(playlist, channel)
     @playlist = playlist
-    @player_channel = player_channel
+    @channel = channel
+    @buffer = Buffer.new
     @status = :initialize
   end
 
@@ -28,7 +29,8 @@ class Player
     @start_byte_number += data.size
     p "#{Time.now - @play_started_at}. Track: #{track.info.tag['title']}. Data size: #{data.size}"
 
-    @player_channel.push(data)
+    @channel.push(data)
+    @buffer.push(data)
   end
 
   def stop

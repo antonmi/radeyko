@@ -1,4 +1,5 @@
 require 'eventmachine'
+require 'em-http-request'
 class Client < EM::Connection
 
   def post_init
@@ -8,7 +9,6 @@ class Client < EM::Connection
 
   def receive_data(data)
     puts "recieved data"
-    require 'pry'; binding.pry
     puts "size: #{data.size}"
     puts "first: #{data[0]}, last: #{data[data.size - 1]}"
   end
@@ -16,5 +16,9 @@ class Client < EM::Connection
 end
 
 EM.run do
-  EventMachine::connect '127.0.0.1', 3000, Client
+  900.times do
+    # EventMachine::connect '127.0.0.1', 3000, Client
+    http = EventMachine::HttpRequest.new('http://localhost:3000/streams/test').get
+    http.stream { |chunk| print chunk.size }
+  end
 end

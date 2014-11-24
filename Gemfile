@@ -10,3 +10,4 @@ gem 'pry'
 
 gem 'data_mapper'
 gem 'dm-yaml-adapter'
+gem 'em-http-request'
