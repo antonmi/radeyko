@@ -8,6 +8,7 @@ class Track
     @index = index
     Mp3Info.open(path) do |mp3info|
       @info = mp3info
+      @info.instance_variable_get(:@io).close
     end
     @size = @info.instance_variable_get(:@io_size)
     @data_pos = @info.instance_variable_get(:@first_frame_pos)
@@ -26,7 +27,8 @@ class Track
   end
 
   def read_data(size, offset)
-    File.read(@path, size, data_pos + offset).bytes
+    string = File.read(@path, size, data_pos + offset)
+    string ? string.bytes : [] #TODO fix this.
   end
 
   def size_for_time(time)

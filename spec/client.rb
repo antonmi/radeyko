@@ -16,7 +16,7 @@ class Client < EM::Connection
 end
 
 EM.run do
-  900.times do
+  1000.times do
     # EventMachine::connect '127.0.0.1', 3000, Client
     http = EventMachine::HttpRequest.new('http://localhost:3000/streams/test').get
     http.stream { |chunk| print chunk.size }
