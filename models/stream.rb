@@ -39,7 +39,6 @@ class Stream
     while @data.size > chunk_size
       data = @data.shift(chunk_size)
       data += stream_info_bytes
-      p data.size
       packed_data = data.pack('C*')
       connections_channel.push(packed_data)
       @buffer.push(packed_data)

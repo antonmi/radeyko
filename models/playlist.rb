@@ -12,7 +12,7 @@ class Playlist
   end
 
   def self.from_dir(path)
-    file_paths = Dir["#{path}/**/*.mp3"].sort
+    file_paths = Dir["#{path}/**/*.mp3"].shuffle
     new(file_paths)
   end
 

@@ -23,7 +23,7 @@ def run(opts)
     end
 
     Rack::Server.start(app: dispatch, server: server, Host: host, Port: port)
-
+    Radeyko.start!
   end
 end
 

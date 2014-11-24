@@ -1,9 +1,7 @@
 require 'sinatra'
 
 $: << File.dirname(__FILE__)
-require 'lib/radeyko'
 require 'lib/thin/server'
-require 'lib/server'
 
 class RadeykoApp < Sinatra::Base
 
