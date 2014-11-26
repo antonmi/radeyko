@@ -1,7 +1,8 @@
 class Radeyko
 
   def self.start!
-    playlist = Playlist.from_dir("/home/radeyko/music/Перкалаба")
+    playlist = Playlist.from_dir("/home/antonmi/Dropbox/Music/Перкалаба")
+    # playlist = Playlist.from_dir("/home/radeyko/music/Перкалаба")
     channel = Channel.new('test', playlist)
     channel.player.play
     Channel.channels.merge!(channel.name => channel)

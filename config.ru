@@ -1,5 +1,6 @@
 require 'eventmachine'
 require 'thin'
+require 'pry'
 
 root = ::File.dirname(__FILE__)
 require ::File.join( root, 'app' )
@@ -7,7 +8,7 @@ require ::File.join( root, 'app' )
 def run(opts)
   EM.run do
     server  = opts[:server] || 'thin'
-    host    = opts[:host]   || '127.0.0.1'
+    host    = opts[:host]   || '0.0.0.0'
     port    = opts[:port]   || '3000'
     web_app = opts[:app]
 
@@ -26,5 +27,5 @@ def run(opts)
     Radeyko.start!
   end
 end
-
+require 'pry'; binding.pry
 run app: RadeykoApp.new
