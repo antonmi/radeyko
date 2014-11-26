@@ -1,17 +1,5 @@
-class RadeykoApp < Sinatra::Base
+require 'eventmachine'
 
-  get '/channels/:name/play' do
-    channel = Channel.channels[params[:name]]
-    channel.player.play
-    status 200
-  end
-
-  get '/channels/input' do
-    EM.start_server "0.0.0.0", 3001, Server
-  end
-
-
-end
 
 class Server < EM::Connection
 
@@ -33,4 +21,8 @@ class Server < EM::Connection
     puts "-- someone disconnected from the echo server!"
   end
 
+end
+
+EM.run do
+  EM.start_server "0.0.0.0", 3001, Server
 end

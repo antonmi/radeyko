@@ -1,6 +1,6 @@
 class Channel
 
-  attr_reader :player, :name, :stream
+  attr_reader :source, :name, :stream
 
   def self.channels
     @channels ||= {}
@@ -14,9 +14,9 @@ class Channel
     @clients ||= {}
   end
 
-  def initialize(name, playlist)
+  def initialize(name, source)
     @name = name
-    @player = Player.new(playlist, EM::Channel.new)
+    @source = source
   end
 
   def subscribe_client(stream, out)
@@ -41,7 +41,7 @@ class Channel
   def get_stream(klass)
     stream = available_streams[klass]
     return stream if stream
-    stream = klass.new(@player.channel, @player.buffer.data)
+    stream = klass.new(@source.channel, @source.buffer.data)
     available_streams.merge!(stream.class => stream)
     stream
   end

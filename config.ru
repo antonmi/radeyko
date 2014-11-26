@@ -27,5 +27,5 @@ def run(opts)
     Radeyko.start!
   end
 end
-require 'pry'; binding.pry
+
 run app: RadeykoApp.new
