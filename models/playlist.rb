@@ -48,4 +48,10 @@ class Playlist
     @timeline.bytes[index - 2]
   end
 
+  def rewind_bytes_count(start_byte_number, time)
+    track = current_track(start_byte_number)
+    track.size_for_time(time)
+  end
+
+
 end

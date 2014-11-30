@@ -69,17 +69,27 @@ class Channel
     @source.pause
   end
 
-  def next_track
-    @source.next_track
+  def next
+    @source.next
   end
 
-  def prev_track
-    @source.prev_track
+  def prev
+    @source.prev
   end
+
+  def fwd
+    @source.fwd
+  end
+
+  def rev
+    @source.rev
+  end
+
 
   def clear_stream_buffers
     available_streams.values.each { |stream| stream.clear_buffer }
   end
+
 
 
 

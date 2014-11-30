@@ -36,12 +36,20 @@ class Player
     @status = :pause
   end
 
-  def next_track
+  def next
     @start_byte_number = @playlist.next_track_start_byte(@start_byte_number)
   end
 
-  def prev_track
+  def prev
     @start_byte_number = @playlist.prev_track_start_byte(@start_byte_number)
+  end
+
+  def fwd
+    @start_byte_number += @playlist.rewind_bytes_count(@start_byte_number, 5)
+  end
+
+  def rev
+    @start_byte_number -= @playlist.rewind_bytes_count(@start_byte_number, 5)
   end
 
 
