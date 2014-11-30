@@ -32,5 +32,9 @@ module Streams
       end
     end
 
+    def clear_buffer
+      @buffer = Buffer.new
+    end
+
   end
 end

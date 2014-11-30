@@ -10,16 +10,43 @@ class Player
   end
 
   def play
-    @status = :play
+    return if :status == :play
     @play_started_at = Time.now
     @data_got_at = Time.now
-    @start_byte_number = 0
+
+    if @status == :initialize || @status == :stop
+      @start_byte_number = 0
+    end
 
     @heart_bit = EM::PeriodicTimer.new(1) do
       play_next_interval
     end
-
+    @status = :play
   end
+
+  def stop
+    @buffer = Buffer.new
+    @heart_bit.cancel
+    @status = :stop
+  end
+
+  def pause
+    @heart_bit.cancel
+    @play_paused_at = Time.now
+    @status = :pause
+  end
+
+  def next_track
+    @start_byte_number = @playlist.next_track_start_byte(@start_byte_number)
+  end
+
+  def prev_track
+    @start_byte_number = @playlist.prev_track_start_byte(@start_byte_number)
+  end
+
+
+
+  private
 
   def play_next_interval
     time = Time.now - @data_got_at
@@ -33,9 +60,5 @@ class Player
     @buffer.push(data)
   end
 
-  def stop
-    @status = :stop
-    @heart_bit.cancel
-  end
 
 end

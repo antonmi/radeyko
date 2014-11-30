@@ -52,7 +52,34 @@ class Channel
     stream.connections_channel.unsubscribe(name)
   end
 
+  def perform_command(command)
+    send(command)
+  end
 
+  def play
+    @source.play
+  end
+
+  def stop
+    @source.stop
+    clear_stream_buffers
+  end
+
+  def pause
+    @source.pause
+  end
+
+  def next_track
+    @source.next_track
+  end
+
+  def prev_track
+    @source.prev_track
+  end
+
+  def clear_stream_buffers
+    available_streams.values.each { |stream| stream.clear_buffer }
+  end
 
 
 
