@@ -1,10 +1,16 @@
 class RadeykoApp < Sinatra::Base
 
-  get '/channels/:name/play' do
+  get '/channels/:name/:command' do
     channel = Channel.channels[params[:name]]
-    channel.player.play
-    status 200
+    if channel.perform_command(params[:command])
+      status 200
+    else
+      status 404
+    end
   end
 
 
+
+
 end
+
