@@ -37,6 +37,17 @@ class Playlist
     @tracks[index]
   end
 
+  def next_track_start_byte(start_byte_number)
+    index = @timeline.track_index(start_byte_number)
+    @timeline.bytes[index]
+  end
+
+  def prev_track_start_byte(start_byte_number)
+    index = @timeline.track_index(start_byte_number)
+    return 0 if index < 2
+    @timeline.bytes[index - 2]
+  end
+
   def rewind_bytes_count(start_byte_number, time)
     track = current_track(start_byte_number)
     track.size_for_time(time)
