@@ -1,10 +1,11 @@
 class Player
 
-  attr_reader :status, :channel, :buffer
+  attr_reader :status, :channel, :buffer, :info_channel
 
-  def initialize(playlist, channel)
+  def initialize(playlist, channel, info_channel = EM::Channel.new)
     @playlist = playlist
     @channel = channel
+    @info_channel = info_channel
     @buffer = Buffer.new
     @status = :initialize
   end
@@ -52,20 +53,44 @@ class Player
     @start_byte_number -= @playlist.rewind_bytes_count(@start_byte_number, 5)
   end
 
-
+  def info
+    { player: player_info, track: track_info }
+  end
 
   private
 
   def play_next_interval
     time = Time.now - @data_got_at
     @data_got_at += time
-    data = @playlist.current_data(@start_byte_number, time)
-    track = @playlist.current_track(@start_byte_number)
-    @start_byte_number += data.size
-    p "#{Time.now - @play_started_at}. Track: #{track.info.tag['title']}. Data size: #{data.size}"
+    @current_data = @playlist.current_data(@start_byte_number, time)
+    @current_track = @playlist.current_track(@start_byte_number)
+    @start_byte_number += @current_data.size
 
-    @channel.push(data)
-    @buffer.push(data)
+    push_data
+  end
+
+  def push_data
+    @channel.push(@current_data)
+    @buffer.push(@current_data)
+
+    p info
+    @info_channel.push(info)
+  end
+
+  def player_info
+    {
+        status: @status,
+        play_started_at: @play_started_at,
+        current_track_time: @playlist.current_track_time(@start_byte_number).to_i
+    }
+  end
+
+  def track_info
+    {
+        title: @current_track.title,
+        bitrate: @current_track.bitrate,
+        length: @current_track.length.to_i
+    }
   end
 
 

@@ -15,7 +15,20 @@ class Streams::Icy < Streams::Base
   end
 
   def stream_info_bytes
-    [0]
+    size = info_string.bytesize
+    return [0] if size.zero?
+    blocks = size / 16 + 1
+    zeros = blocks * 16 - size
+    bytes = [blocks] + info_string.bytes + [0]*zeros
+    bytes
+  end
+
+  def info_string
+    if @stream_title
+      "StreamTitle='#{@stream_title}';"
+    else
+      ''
+    end
   end
 
 end

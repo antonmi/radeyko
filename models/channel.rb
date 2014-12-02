@@ -41,11 +41,10 @@ class Channel
   def get_stream(klass)
     stream = available_streams[klass]
     return stream if stream
-    stream = klass.new(@source.channel, @source.buffer.data)
+    stream = klass.new(@source.channel, @source.info_channel, @source.buffer.data)
     available_streams.merge!(stream.class => stream)
     stream
   end
-
 
   def remove_client(stream, out)
     name = @clients.delete(out)
@@ -54,6 +53,10 @@ class Channel
 
   def perform_command(command)
     send(command)
+  end
+
+  def info
+    @source.info
   end
 
   def play

@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 
 gem 'eventmachine'
 gem 'sinatra'
+gem 'sinatra-contrib'
 gem 'thin'
 gem 'rspec'
 gem 'ruby-mp3info'

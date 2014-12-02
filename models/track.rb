@@ -14,6 +14,10 @@ class Track
     @data_pos = @info.instance_variable_get(:@first_frame_pos)
   end
 
+  def title
+    @info.tag['title']
+  end
+
   def bitrate
     @info.bitrate
   end

@@ -1,24 +1,29 @@
 module Streams
   class Base
 
-    attr_reader :player_channel, :connections_channel, :buffer
+    attr_reader :data_channel, :info_channel, :connections_channel, :buffer
+    attr_accessor :stream_title
 
     def chunk_size
       24576
     end
 
-    def initialize(player_channel, initial_data = [])
-      @player_channel = player_channel
+    def initialize(data_channel, info_channel, initial_data = [])
+      @data_channel = data_channel
+      @info_channel = info_channel
       @connections_channel = EM::Channel.new
       @buffer = Buffer.new
       @data = initial_data
-      init_handler
+      init_handlers
     end
 
-    def init_handler
-      @player_channel.subscribe do |data|
+    def init_handlers
+      @data_channel.subscribe do |data|
         @data += data
         prepare_and_send!
+      end
+      @info_channel.subscribe do |data|
+        handle_info(data)
       end
     end
 
@@ -34,6 +39,10 @@ module Streams
 
     def clear_buffer
       @buffer = Buffer.new
+    end
+
+    def handle_info(data)
+      @stream_title = data[:track][:title]
     end
 
   end
