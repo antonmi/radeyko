@@ -20,16 +20,22 @@ class Playlist
   def current_data(start_byte_number, time)
     byte_number = start_byte_number
     data = []
-    while time > 0.1
+    while time > 0.05
       track = current_track(byte_number)
+      break unless track
       size = track.size_for_time(time)
       offset = @timeline.offset_for_track(byte_number)
       track_data = track.read_data(size, offset)
+      break if track_data.empty?
       byte_number += track_data.size + 1
       time -= track.time_for_size(track_data.size)
       data += track_data
     end
     data
+  end
+
+  def bytesize
+    @timeline.bytes.last
   end
 
   def current_track(start_byte_number)
@@ -50,11 +56,12 @@ class Playlist
 
   def rewind_bytes_count(start_byte_number, time)
     track = current_track(start_byte_number)
-    track.size_for_time(time)
+    track ? track.size_for_time(time) : start_byte_number
   end
 
   def current_track_time(start_byte_number)
     track = current_track(start_byte_number)
+    return 0 unless track
     track.time_for_size(@timeline.offset_for_track(start_byte_number))
   end
 

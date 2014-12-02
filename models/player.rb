@@ -6,6 +6,7 @@ class Player
     @playlist = playlist
     @channel = channel
     @info_channel = info_channel
+    @loop = true
     @buffer = Buffer.new
     @status = :initialize
   end
@@ -38,23 +39,31 @@ class Player
   end
 
   def next
-    @start_byte_number = @playlist.next_track_start_byte(@start_byte_number)
+    self.start_byte_number = @playlist.next_track_start_byte(@start_byte_number)
   end
 
   def prev
-    @start_byte_number = @playlist.prev_track_start_byte(@start_byte_number)
+    self.start_byte_number = @playlist.prev_track_start_byte(@start_byte_number)
   end
 
   def fwd
-    @start_byte_number += @playlist.rewind_bytes_count(@start_byte_number, 5)
+    self.start_byte_number = @start_byte_number + @playlist.rewind_bytes_count(@start_byte_number, 5)
   end
 
   def rev
-    @start_byte_number -= @playlist.rewind_bytes_count(@start_byte_number, 5)
+    self.start_byte_number = @start_byte_number - @playlist.rewind_bytes_count(@start_byte_number, 5)
   end
 
   def info
     { player: player_info, track: track_info }
+  end
+
+  def start_byte_number=(value)
+    @start_byte_number = value
+    @start_byte_number = 0 if @start_byte_number < 0
+    if @start_byte_number > @playlist.bytesize && @loop
+      @start_byte_number = 0
+    end
   end
 
   private
@@ -72,7 +81,6 @@ class Player
   def push_data
     @channel.push(@current_data)
     @buffer.push(@current_data)
-
     p info
     @info_channel.push(info)
   end
@@ -86,12 +94,12 @@ class Player
   end
 
   def track_info
+    return {} unless @current_track
     {
         title: @current_track.title,
         bitrate: @current_track.bitrate,
         length: @current_track.length.to_i
     }
   end
-
 
 end

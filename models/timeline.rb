@@ -17,6 +17,7 @@ class Timeline
   end
 
   def track_index(byte)
+    byte = byte % @bytes_reversed.first if loop
     byte = @bytes_reversed.detect { |b| byte >= b }
     if byte
       @bytes.index(byte) + 1
