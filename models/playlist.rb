@@ -20,7 +20,7 @@ class Playlist
   def current_data(start_byte_number, time)
     byte_number = start_byte_number
     data = []
-    while time > 0.05
+    while time > 0
       track = current_track(byte_number)
       break unless track
       size = track.size_for_time(time)
