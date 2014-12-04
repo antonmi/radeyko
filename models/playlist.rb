@@ -20,16 +20,17 @@ class Playlist
   def current_data(start_byte_number, time)
     byte_number = start_byte_number
     data = []
-    while time > 0
+    loop_counter = 0
+    while time > 0.1 && loop_counter < 100
       track = current_track(byte_number)
       break unless track
       size = track.size_for_time(time)
       offset = @timeline.offset_for_track(byte_number)
       track_data = track.read_data(size, offset)
-      break if track_data.empty?
       byte_number += track_data.size + 1
       time -= track.time_for_size(track_data.size)
       data += track_data
+      loop_counter += 1
     end
     data
   end
