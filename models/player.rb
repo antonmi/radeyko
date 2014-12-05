@@ -61,7 +61,7 @@ class Player
   def start_byte_number=(value)
     @start_byte_number = value
     @start_byte_number = 0 if @start_byte_number < 0
-    if @start_byte_number > @playlist.bytesize && @loop
+    if @start_byte_number >= @playlist.bytesize && @loop
       @start_byte_number = 0
     end
   end
@@ -73,7 +73,7 @@ class Player
     @data_got_at += time
     @current_data = @playlist.current_data(@start_byte_number, time)
     @current_track = @playlist.current_track(@start_byte_number)
-    @start_byte_number += @current_data.size
+    self.start_byte_number = @start_byte_number + @current_data.size
 
     push_data
   end
