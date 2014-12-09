@@ -8,6 +8,7 @@ require_relative 'streams'
 require_relative 'buffer'
 require_relative 'channel'
 require_relative 'source'
+require_relative 'track_sources'
 
 require_relative 'test_model'
 

@@ -71,11 +71,14 @@ class Player
   def play_next_interval
     time = Time.now - @data_got_at
     @data_got_at += time
-    @current_data = @playlist.current_data(@start_byte_number, time)
     @current_track = @playlist.current_track(@start_byte_number)
-    self.start_byte_number = @start_byte_number + @current_data.size
 
-    push_data
+    current_data_dfr = @playlist.current_data_dfr(@start_byte_number, time)
+    current_data_dfr.callback do |data|
+      @current_data = data
+      self.start_byte_number = @start_byte_number + @current_data.size
+      push_data
+    end
   end
 
   def push_data

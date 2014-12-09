@@ -1,8 +1,8 @@
 class Radeyko
 
   def self.start!
-    # playlist = Playlist.from_dir("/home/antonmi/Dropbox/Music/Перкалаба")
-    playlist = Playlist.from_dir("/home/antonmi/Music/Перкалаба")
+    playlist = Playlist.from_dir("/home/antonmi/Dropbox/Music/Перкалаба")
+    # playlist = Playlist.from_dir("/home/antonmi/Music/Перкалаба")
     source = Player.new(playlist, EM::Channel.new)
     # source = Source.new('0.0.0.0', 3001, EM::Channel.new)
 

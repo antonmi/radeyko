@@ -50,6 +50,8 @@ GEM
       dm-core (~> 1.2.0)
     dm-yaml-adapter (1.2.0)
       dm-core (~> 1.2.0)
+    dropbox-sdk (1.6.4)
+      json
     em-http-request (1.1.2)
       addressable (>= 2.3.4)
       cookiejar
@@ -113,6 +115,7 @@ PLATFORMS
 DEPENDENCIES
   data_mapper
   dm-yaml-adapter
+  dropbox-sdk
   em-http-request
   eventmachine
   pry

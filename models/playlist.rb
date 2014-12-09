@@ -6,7 +6,7 @@ class Playlist
     @file_paths = file_paths
     @tracks = []
     file_paths.each_with_index do |path, index|
-      @tracks << Track.new(path, index)
+      @tracks << Track.new(TrackSources::LocalFile.new(path), index)
     end
     @timeline = Timeline.new(@tracks)
     @timeline.bytes
@@ -17,21 +17,31 @@ class Playlist
     new(file_paths)
   end
 
-  def current_data(start_byte_number, time)
-    byte_number = start_byte_number
-    data = []
-    while time > 0.1
+  def current_data_dfr(start_byte_number, time)
+    dfr = EM::DefaultDeferrable.new
+    get_data_recursion(start_byte_number, time, [], dfr)
+    dfr
+  end
+
+  def get_data_recursion(byte_number, time, data, dfr)
+    if time > 0.1
       track = current_track(byte_number)
-      break unless track
+      return data unless track
       size = track.size_for_time(time)
       offset = @timeline.offset_for_track(byte_number)
-      track_data = track.read_data(size, offset)
-      byte_number += track_data.size + 1
-      time -= track.time_for_size(track_data.size)
-      data += track_data
+
+      track_data_drf = track.read_data_dfr(size, offset)
+      track_data_drf.callback do |track_data|
+        byte_number += track_data.size + 1
+        time -= track.time_for_size(track_data.size)
+        data += track_data
+        get_data_recursion(byte_number, time, data, dfr)
+      end
+    else
+      dfr.succeed(data)
     end
-    data
   end
+
 
   def bytesize
     @timeline.bytes.last
