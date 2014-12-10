@@ -6,21 +6,27 @@ class Track
   def initialize(track_source, index)
     @track_source = track_source
     @index = index
+  end
 
-    size_dfr = track_source.size_dfr
-    size_dfr.callback { |size| p 'size_drf'; @size = size}
+  def init_dfr
+    dfr = EM::DefaultDeferrable.new
+    size_dfr = @track_source.size_dfr
+    size_dfr.callback do |size|
+      @size = size
+      header_dfr = @track_source.read_data_dfr(300_000, 0, 0)
 
-    header_dfr = track_source.read_data_dfr(300_000, 0, 0)
-
-    header_dfr.callback do |header_data|
-      p 'header_dfr'
-      mp3_data = StringIO.new(header_data.pack('c*'))
-      Mp3Info.open(mp3_data) { |mp3info|  @info = mp3info }
-      puts '='*100
-      @size = track_source.size
-      @data_pos = @info.instance_variable_get(:@first_frame_pos)
-      @length =  data_size.to_f * 8 / bitrate / 1000
+      header_dfr.callback do |header_data|
+        p "header_dfr  #{@index}"
+        mp3_data = StringIO.new(header_data.pack('c*'))
+        Mp3Info.open(mp3_data) { |mp3info|  @info = mp3info }
+        puts '='*100
+        @size = @track_source.size
+        @data_pos = @info.instance_variable_get(:@first_frame_pos)
+        @length =  data_size.to_f * 8 / bitrate / 1000
+        dfr.succeed
+      end
     end
+    dfr
   end
 
   def path

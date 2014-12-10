@@ -21,7 +21,7 @@ class Player
     end
 
     @heart_bit = EM::PeriodicTimer.new(1) do
-      play_next_interval
+      play_next_interval unless @fetching_data
     end
     @status = :play
   end
@@ -74,9 +74,11 @@ class Player
     @current_track = @playlist.current_track(@start_byte_number)
 
     current_data_dfr = @playlist.current_data_dfr(@start_byte_number, time)
+    @fetching_data = true
     current_data_dfr.callback do |data|
       @current_data = data
       self.start_byte_number = @start_byte_number + @current_data.size
+      @fetching_data = false
       push_data
     end
   end

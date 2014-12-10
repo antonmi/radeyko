@@ -1,5 +1,6 @@
 require 'sinatra'
 require "sinatra/json"
+require 'em-http-request'
 
 $: << File.dirname(__FILE__)
 require 'lib/thin/server'

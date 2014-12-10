@@ -19,7 +19,7 @@ class TrackSources::LocalFile
 
   def size_dfr
     dfr = EM::DefaultDeferrable.new
-    EM::next_tick { dfr.succeed size }
+    EM.next_tick { dfr.succeed size }
     dfr
   end
 

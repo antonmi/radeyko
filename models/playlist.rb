@@ -5,17 +5,34 @@ class Playlist
   def initialize(file_paths)
     @file_paths = file_paths
     @tracks = []
-    file_paths.each_with_index do |path, index|
-      @tracks << Track.new(TrackSources::LocalFile.new(path), index)
-    end
-    @timeline = Timeline.new(@tracks)
-    @timeline.bytes
   end
 
   def self.from_dir(path)
     file_paths = Dir["#{path}/**/*.mp3"].shuffle
     new(file_paths)
   end
+
+  def read_tracks_dfr
+    dfr = EM::DefaultDeferrable.new
+    process_file_recursion(@file_paths, 0, dfr)
+    dfr.callback { @timeline = Timeline.new(@tracks) }
+    dfr
+  end
+
+  def process_file_recursion(paths_remain, index, dfr)
+    path = paths_remain.shift
+    if path
+      # track = Track.new(TrackSources::LocalFile.new(path), index)
+      track = Track.new(TrackSources::DropboxFile.new(path), index)
+      track.init_dfr.callback do
+        @tracks << track
+        process_file_recursion(paths_remain, index + 1, dfr)
+      end
+    else
+      dfr.succeed
+    end
+  end
+
 
   def current_data_dfr(start_byte_number, time)
     dfr = EM::DefaultDeferrable.new
