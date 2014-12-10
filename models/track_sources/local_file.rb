@@ -17,4 +17,14 @@ class TrackSources::LocalFile
     string ? string.bytes : [] #TODO fix this.
   end
 
+  def size_dfr
+    dfr = EM::DefaultDeferrable.new
+    EM::next_tick { dfr.succeed size }
+    dfr
+  end
+
+  def size
+    File.size(@path)
+  end
+
 end

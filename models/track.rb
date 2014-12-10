@@ -1,25 +1,26 @@
 require 'mp3info'
 class Track
 
-  attr_reader :info, :index, :data_pos, :size
+  attr_reader :info, :index, :data_pos, :size, :length
 
   def initialize(track_source, index)
     @track_source = track_source
     @index = index
 
-    header = track_source.read_data(1_000_000, 0, 0).pack('c*')
-    # Mp3Info.open(StringIO.new(header)) do |mp3info|
-    Mp3Info.open(track_source.path) do |mp3info|
-      @info = mp3info
-      @info.instance_variable_get(:@io).close
+    size_dfr = track_source.size_dfr
+    size_dfr.callback { |size| p 'size_drf'; @size = size}
+
+    header_dfr = track_source.read_data_dfr(300_000, 0, 0)
+
+    header_dfr.callback do |header_data|
+      p 'header_dfr'
+      mp3_data = StringIO.new(header_data.pack('c*'))
+      Mp3Info.open(mp3_data) { |mp3info|  @info = mp3info }
+      puts '='*100
+      @size = track_source.size
+      @data_pos = @info.instance_variable_get(:@first_frame_pos)
+      @length =  data_size.to_f * 8 / bitrate / 1000
     end
-    puts '='*100
-    # require 'pry'; binding.pry
-    @size = @info.instance_variable_get(:@io_size)
-    @data_pos = @info.instance_variable_get(:@first_frame_pos)
-    p @size - @data_pos
-    p @info.length * bitrate * 1000 / 8
-    require 'pry'; binding.pry
   end
 
   def path
@@ -32,10 +33,6 @@ class Track
 
   def bitrate
     @info.bitrate
-  end
-
-  def length
-    @info.length
   end
 
   def data_size
