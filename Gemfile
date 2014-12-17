@@ -14,4 +14,3 @@ gem 'dm-yaml-adapter'
 gem 'em-http-request'
 
 gem 'dropbox-sdk'
-gem 'google-api-client'
