@@ -3,6 +3,7 @@ require "sinatra/json"
 require 'em-http-request'
 
 $: << File.dirname(__FILE__)
+require 'lib/config/api_creds'
 require 'lib/thin/server'
 
 class RadeykoApp < Sinatra::Base

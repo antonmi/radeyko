@@ -5,9 +5,9 @@ class Radeyko
     # playlist = Playlist.from_dir("/home/antonmi/Music/Перкалаба")
 
     playlist = Playlist.new([
-                                "/music/Перкалаба/Перкалаба - We R The Beetles [Dirtyindie Mix].mp3",
-                                "/music/Перкалаба/Перкалаба - 4 Танкиста.mp3",
-                                "/music/Перкалаба/Перкалаба - Soledad (Qarpa Cover).mp3"
+                                "/Перкалаба/Перкалаба - We R The Beetles [Dirtyindie Mix].mp3",
+                                "/Перкалаба/Перкалаба - 4 Танкиста.mp3",
+                                "/Перкалаба/Перкалаба - Soledad (Qarpa Cover).mp3"
                             ])
 
     playlist.read_tracks_dfr.callback do

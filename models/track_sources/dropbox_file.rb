@@ -5,7 +5,7 @@ class TrackSources::DropboxFile
 
   def initialize(path)
     @path = path
-    access_token = "Z7TJuCMKmO8AAAAAAAAFw2cw6apI36rkVXtbtZRik6He60wcf8Kfzjb2lJB9f459"
+    access_token = Config::ApiCreds.dropbox[:access_token]
     @client = DropboxClient.new(access_token)
   end
 

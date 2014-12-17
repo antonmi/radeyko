@@ -3,3 +3,4 @@ log/**/*.log
 .idea
 .ruby-gemset
 .ruby-version
+config/api_creds.yml

@@ -1,0 +1,5 @@
+:dropbox:
+  :api_key: API_KEY
+  :api_secret: API_SECRET
+  :access_token: ACCESS_TOKEN
+  :user_id: USER_ID
